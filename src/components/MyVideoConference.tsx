@@ -194,6 +194,9 @@ import { DenoiseMethod } from '@/lib/types';
             passwd: metadataObj?.passwd,
             max_participant_num: metadataObj?.maxParticipants,
         }
+
+        console.log('metadataObj',metadataObj)
+        console.log('update roominfo$', roominfo)
         roominfo$.next(roominfo)
     
     

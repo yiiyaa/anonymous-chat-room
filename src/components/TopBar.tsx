@@ -9,21 +9,22 @@ import { useRouter } from 'next/router';
 import { useTranslation, Trans } from 'react-i18next'
 import LanguageIcon from './Icons/LanguageIcon';
 import { MyInfoToast } from './Toast';
+import { useShowToast } from '@/lib/hooks/useToast';
 export interface TopBarProps extends React.HTMLAttributes<SVGElement> {
   roomName?: string;
 }
 export default function TopBar() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
-  const [showToast, setShowToast] = useState<boolean>(false);
-  const [TostMsg, setTostMsg] = useState<string>("");
-  const [TostTimer, setTostTimer] = useState<any>(null);
+//   const [showToast, setShowToast] = useState<boolean>(false);
+
   const [lng, setLng] = useState<string>('en');
 
 const roominfo_after_enter = useRoomInfo()
 
 const router = useRouter();
 const mcurState = useCurState()
+const { isShowToast, showToast, TostMsg } = useShowToast()
 const { t, i18n } = useTranslation()
 
 useEffect(() => {
@@ -36,19 +37,17 @@ useEffect(() => {
     i18n.changeLanguage(lng)
   }, [lng])
 
+const share = () => {
+    let url = window.location.origin + window.location.pathname
+    if (roominfo_after_enter?.passwd) url += '?passwd=' + encodeURI(roominfo_after_enter.passwd);
+    navigator.clipboard.writeText(url);
+    showToast(t('copySuccess'))
+}
+
 const switchLanguage = () => {
     const lng = i18n.language=='en'?'zh':'en'
     setLng(lng)
-    setTostMsg(i18n.language=='zh'?'切换为中文':'Switch to English')
-    if(TostTimer != null){
-        setShowToast(false)
-        clearTimeout(TostTimer)
-    }
-    setShowToast(true)
-    const mTostTimer = setTimeout(() => {
-        setShowToast(false)
-    }, 1000);
-    setTostTimer(mTostTimer)
+    showToast(i18n.language=='zh'?'切换为中文':'Switch to English')
   };
 
 useEffect(() => {
@@ -112,6 +111,12 @@ const isjoin = useMemo(() => {
         )}
       </div>
 
+        {/* Share Icon */}
+        <div className=" animate__animated  animate__fadeIn">
+        <div className="btn btn-ghost normal-case  text-center text-xl " onClick={share}>
+            <LanguageIcon className='icon  text-primary-focus' fill="currentColor"/>
+        </div>
+        </div>
 
         {/* Language Switch */}
         <div className=" animate__animated  animate__fadeIn">
@@ -187,7 +192,7 @@ const isjoin = useMemo(() => {
 
         {/* toast */}
         {
-        showToast && <MyInfoToast>
+        isShowToast && <MyInfoToast>
             {TostMsg}
         </MyInfoToast>
       }

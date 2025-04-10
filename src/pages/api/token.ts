@@ -83,12 +83,16 @@ export default async function handleToken(req: NextApiRequest, res: NextApiRespo
         if(lru.get(roomName)){
             lru.delete(roomName)
         }
-        const t: RoomMetadata = {passwd: passwd, time: new Date().getTime(), maxParticipants: defaultMaxParticipants}
+        const t: RoomMetadata = {passwd: passwd, time: new Date().getTime(), maxParticipants: defaultMaxParticipants, numOfPaticipants: 0}
         lru.set(roomName, t)
-        roomService.updateRoomMetadata(
-            roomName,
-            JSON.stringify(t)
-        )
+
+        // create room
+        roomService.createRoom({
+            name: roomName,
+            emptyTimeout: 30,
+            maxParticipants: defaultMaxParticipants,
+            metadata: JSON.stringify(t)
+        })
         // console.log('metadata: ', metadata)
         try {
           metadataObj = metadata ? {...JSON.parse(metadata)} : {};
@@ -108,6 +112,10 @@ export default async function handleToken(req: NextApiRequest, res: NextApiRespo
     }
 
     const token = await createToken({ identity, name, metadata: metadataProcess }, grant);
+    const roomLRUItem: RoomMetadata = lru.get(roomName)
+    roomLRUItem.numOfPaticipants += 1;
+    lru.set(roomName, roomLRUItem)
+
     const result: TokenResult = {
       identity,
       accessToken: token,

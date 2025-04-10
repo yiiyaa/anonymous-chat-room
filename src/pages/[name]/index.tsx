@@ -162,7 +162,7 @@ const ActiveRoom = ({ roomName, userChoices, onLeave }: ActiveRoomProps) => {
     }).then(() => {
         // 保存会议信息
         let his: RoomHistryType[] = JSON.parse(localStorage.getItem('roomHistory') || JSON.stringify([]));
-        if(his.length > 10){
+        while(his.length > parseInt(process.env.NEXT_PUBLIC_MAX_HISTORY_ROOMS || "6") ){
             his.shift();
         }
         // 清理同名会议

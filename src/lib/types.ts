@@ -19,6 +19,7 @@ export interface RoomMetadata  {
     passwd: string,
     time: number,
     maxParticipants: number,
+    numOfPaticipants: number,
     videoShareUrl?: string
 }
 

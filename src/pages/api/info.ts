@@ -42,11 +42,11 @@ export default async function handler(
     const l: (RoomMetadata | undefined) = lru.get(roomName as string) as RoomMetadata | undefined
     // for passwd debug
     // if(l) console.log(`get passwd for ${roomName}, passwd: ${l.passwd}`)
-    const participants = await roomService.listParticipants(roomName as string);
+    // const participants = await roomService.listParticipants(roomName as string);
     // if(l) console.log(`get num_participants for ${roomName}`)
     const needpass = (l && l.passwd !== "" && l.passwd !== undefined) ? true: false
-    const maxParticipants = l ? l.maxParticipants: 0
-    return res.status(200).json({ num_participants: participants.length, hasPasswd: needpass, maxParticipants: maxParticipants });
+    const maxParticipants = l?.maxParticipants || 0
+    return res.status(200).json({ num_participants: l?.numOfPaticipants || 0, hasPasswd: needpass, maxParticipants: maxParticipants });
   } catch(e) {
     return res.status(200).json({ num_participants: 0, hasPasswd: false, maxParticipants: 0 });
   }
