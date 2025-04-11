@@ -21,7 +21,7 @@
         "@/public/*": ["./public/*"]
       }
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/assets/images/index.ts.bk", "src/components/MyPlayer.js"],
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/assets/images/index.ts.bk", "src/components/MyPlayer.js", "src/lib/chat-utils/plugins/color.js"],
     "exclude": ["node_modules"]
   }
   

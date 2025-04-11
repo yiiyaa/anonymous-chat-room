@@ -205,11 +205,11 @@ const ActiveRoom = ({ roomName, userChoices, onLeave }: ActiveRoomProps) => {
   }, [userChoices, hq, audioContext]);
 
   // using e2ee
-  let e2eeOptions = undefined;
   const keyProvider = useMemo(() => new ExternalE2EEKeyProvider(), []);
-  e2eeOptions = useMemo(() => {
+  useEffect(() => {
     if(process.env.NEXT_PUBLIC_DISABLE_E2EE === 'true' || !userChoices.passwd){
-      return undefined;
+        roomOptions.e2ee = undefined;
+      return;
     }
 
     keyProvider.setKey(userChoices.passwd);
@@ -221,12 +221,15 @@ const ActiveRoom = ({ roomName, userChoices, onLeave }: ActiveRoomProps) => {
             worker: new Worker(new URL('livekit-client/e2ee-worker', import.meta.url)),
           }
         : undefined;
-    return opt;
+    roomOptions.e2ee = opt;
+
   }, [keyProvider, userChoices.passwd]);
   
-  roomOptions.e2ee = e2eeOptions;
-  const room = useMemo(() => new Room(roomOptions), [roomOptions]);
-  !!e2eeOptions && room.setE2EEEnabled(true);
+  const room = useMemo(() => {
+    const r = new Room(roomOptions)
+    !!roomOptions.e2ee && r.setE2EEEnabled(true);
+    return r;
+  }, [roomOptions]);
 
   return (
     <div className="w-full top-16 relative" style={{ height: 'calc(100% - 4rem)' }}>

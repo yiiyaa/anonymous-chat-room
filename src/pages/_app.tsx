@@ -57,7 +57,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     },
                 ]}
             />
-            {/* <TopBar /> */}
+            <TopBar />
             <Component {...pageProps} />
             {/* <Script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></Script> */}
             {process.env.NEXT_PUBLIC_UMAMI_URL != undefined && process.env.NEXT_PUBLIC_UMAMI_URL != "" && (

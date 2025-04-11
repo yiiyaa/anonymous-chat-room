@@ -115,10 +115,10 @@ export const AudioTrack: (
             rnn.disconnect()
         }
         track.setWebAudioPlugins([])
-        debugger
+        
         // 添加降噪模块
         if (denoiseMethod.speex) {
-            debugger
+            
             mdenoiseTools.loadSpeex({ url: speexWasmPath }).then((speexWasmBinary: any) => {
                 
                 const speexn = new mdenoiseTools.SpeexWorkletNode(ctx, {

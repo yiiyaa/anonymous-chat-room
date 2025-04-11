@@ -68,8 +68,6 @@ import { DenoiseMethod } from '@/lib/types';
    */
   export function VideoConference({
     chatMessageFormatter,
-    chatMessageDecoder,
-    chatMessageEncoder,
     SettingsComponent,
     ...props
   }: VideoConferenceProps) {
@@ -251,8 +249,6 @@ import { DenoiseMethod } from '@/lib/types';
               className='fixed  h-[80%] sm:h-full bottom-[4rem] sm:bottom-auto right-0 sm:right-auto sm:relative rounded-lg shadow-xl bg-info p-2 flex flex-col-reverse'
               style={{ display: widgetState.showChat ? 'flex' : 'none' }}
               messageFormatter={chatMessageFormatter}
-              messageEncoder={chatMessageEncoder}
-              messageDecoder={chatMessageDecoder}
             />
             {SettingsComponent && (
               <div

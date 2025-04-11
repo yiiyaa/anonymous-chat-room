@@ -104,7 +104,7 @@ main {
     --lk-fg: #fff;
     --lk-fg-secondary: #333;
     --lk-fg-tertiary: #555;
-  
+    --lk-bg5: #effdde;
     --lk-bg: #e9e7e7;
     --lk-bg2: #bdd6a7;
     --lk-control-hover-bg: rgba(0, 0, 0, 0.3);
@@ -141,4 +141,26 @@ main {
     fill: var(--lk-fg);
     transition: height .1s ease-out,y .1s ease-out;
     rx: .25rem;
+}
+[data-lk-message-origin="local"] .lk-message-body{
+    color: black;
+}
+.lk-chat-entry{
+    .lk-timestamp{
+        color: #a0acb6;
+        font-size: 12px;
+    }
+    .lk-participant-name{
+        color: #d67722;
+    }
+    margin-top: 5px;
+    /* 第一个margin-top为0 */
+    &:first-child{
+        margin-top: 0; 
+    }
+}
+
+.lk-chat-entry * {
+    margin-block-start: 0;
+    margin-block-end: 0;
 }
