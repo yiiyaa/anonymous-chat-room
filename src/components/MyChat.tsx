@@ -5,6 +5,7 @@ import { ChatEntry } from '@/components/MyChatEntry'
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import { DataPacket_Kind } from 'livekit-client';
+import { useCurState } from '@/lib/hooks/useCurState';
 /**
  * @internal
  */
@@ -58,6 +59,7 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
     
 
     const emojiRef = React.useRef<HTMLDivElement>(null);
+    const mcurState = useCurState()
     const [isOpen, setIsOpen] = React.useState(false);
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
@@ -116,6 +118,52 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
         setIsOpen(!isOpen)
         
     }
+
+    const handleUploadImg = async (e: React.MouseEvent) => {
+        const fileInput = document.getElementById('fileSelect') as HTMLInputElement;
+
+        if (fileInput) {
+            fileInput.click();
+            fileInput.onchange = async () => {
+                const file = fileInput.files?.[0];
+                if (!file) return;
+                
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                    const response = await fetch('/api/upload', {
+                        method: 'POST',
+                        headers: {
+                            "authorization": mcurState.token?.accessToken ? 
+                            ("Bearer " + mcurState.token?.accessToken) : ''
+                         },
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Upload failed');
+                    }
+
+                    const data = await response.json();
+                    if (inputRef.current) {
+                        if(data.url.startsWith('http')){
+                            inputRef.current.value += `![image](${data.url})`;
+                        }else{
+                            inputRef.current.value += `![image](${window.location.origin + data.url})`;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    alert('图片上传失败，请重试');
+                }
+
+                // 清空 input 以便重复上传同一文件
+                fileInput.value = '';
+            };
+        }
+    }
+
     const handleAltEnter = async (e: React.KeyboardEvent) => {
         if (inputRef.current) {
             const inp = inputRef.current
@@ -165,9 +213,9 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
     return (
         <div {...props}>
             {/* <form className="lk-chat-form flex text-center items-center" onSubmit={handleSubmit}> */}
-            <div className="grid grid-cols-12 gap-0 w-full">
+            <div className=" flex w-full">
                 <textarea
-                    className="col-span-10 mr-1  overflow-hidden  textarea-lg whitespace-pre-wrap rounded-md border-gray-200 bg-white p-3 text-gray-700 shadow-sm transition focus:border-white focus:outline-none  focus:ring focus: ring-primary-focus"
+                    className="col-span-10 mr-1 flex-1 overflow-hidden  textarea-lg whitespace-pre-wrap rounded-md border-gray-200 bg-white p-3 text-gray-700 shadow-sm transition focus:border-white focus:outline-none  focus:ring focus: ring-primary-focus"
                     disabled={isSending}
                     ref={inputRef}
                     placeholder="Enter a message..."
@@ -176,15 +224,17 @@ export function Chat({ messageFormatter, messageDecoder, messageEncoder, ...prop
                     onKeyUp={e => {
                         if(e.key === 'Enter')
                            e.preventDefault()
+                            // 防止事件传播
+                            e.stopPropagation() // 阻止事件冒泡传播
                            handleAltEnter(e)
                         }}
                 />
                 <div className='ml-1 col-span-2 text-end flex justify-around items-center'>
-                    {/* 发送图片被限制64kb，需要自定义发送接收消息接口，以后再说
-                    <div className=' bg-transparent rounded-[999px] hover:cursor-pointer hover:bg-white hover:bg-opacity-10  w-[36px] h-[36px] flex justify-center items-center'>
-                        <input  type="file" id="fileSelect" name="file"/>
-                        <svg  onClick={handleAdd} className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2628" width="28" height="28"><path d="M928 896H96c-53.02 0-96-42.98-96-96V224c0-53.02 42.98-96 96-96h832c53.02 0 96 42.98 96 96v576c0 53.02-42.98 96-96 96zM224 240c-61.856 0-112 50.144-112 112s50.144 112 112 112 112-50.144 112-112-50.144-112-112-112zM128 768h768V544l-175.03-175.03c-9.372-9.372-24.568-9.372-33.942 0L416 640l-111.03-111.03c-9.372-9.372-24.568-9.372-33.942 0L128 672v96z" p-id="2629" fill="#ffffff"></path></svg>
-                    </div> */}
+                    {/* 发送图片被限制64kb，需要自定义发送接收消息接口，以后再说 */}
+                    <div className=' bg-transparent rounded-[999px] hover:cursor-pointer hover:bg-white/10 w-[36px] h-[36px] flex justify-center items-center'>
+                        <input  type="file" id="fileSelect" name="file" style={{display: 'none'}}/>
+                        <svg  onClick={handleUploadImg} className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2628" width="28" height="28"><path d="M928 896H96c-53.02 0-96-42.98-96-96V224c0-53.02 42.98-96 96-96h832c53.02 0 96 42.98 96 96v576c0 53.02-42.98 96-96 96zM224 240c-61.856 0-112 50.144-112 112s50.144 112 112 112 112-50.144 112-112-50.144-112-112-112zM128 768h768V544l-175.03-175.03c-9.372-9.372-24.568-9.372-33.942 0L416 640l-111.03-111.03c-9.372-9.372-24.568-9.372-33.942 0L128 672v96z" p-id="2629" fill="#ffffff"></path></svg>
+                    </div>
                     <div ref={emojiRef} id="emojiSVG" className=' z-[999] relative bg-transparent rounded-[999px] hover:cursor-pointer hover:bg-white/10  w-[36px] h-[36px] flex justify-center items-center'>
                         <svg className="icon" onClick={handleEmojiClick}  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5020" width="36" height="36"><path d="M512 832c-176.448 0-320-143.552-320-320S335.552 192 512 192s320 143.552 320 320-143.552 320-320 320m0-704C300.256 128 128 300.256 128 512s172.256 384 384 384 384-172.256 384-384S723.744 128 512 128" fill="white" p-id="5021"></path><path d="M700.64 580.288a32 32 0 0 0-43.712 11.68A160.608 160.608 0 0 1 518.304 672a160.576 160.576 0 0 1-138.592-80 32 32 0 0 0-55.424 32.032 224.896 224.896 0 0 0 194.016 112 224.768 224.768 0 0 0 194.016-112 32 32 0 0 0-11.68-43.744M384 512a32 32 0 0 0 32-32v-96a32 32 0 0 0-64 0v96a32 32 0 0 0 32 32M640 512a32 32 0 0 0 32-32v-96a32 32 0 0 0-64 0v96a32 32 0 0 0 32 32" fill="white" p-id="5022"></path></svg>
                         <div id="emojiPicker" className="absolute right-[50%] bottom-full top-auto"
