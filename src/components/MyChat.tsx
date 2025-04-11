@@ -126,37 +126,9 @@ export function Chat({ messageFormatter, ...props }: ChatProps) {
             fileInput.onchange = async () => {
                 const file = fileInput.files?.[0];
                 if (!file) return;
-                
-                const formData = new FormData();
-                formData.append('file', file);
-
-                formData.append('room', mcurState.roomName || '');
-
-                try {
-                    const response = await fetch('/api/upload', {
-                        method: 'POST',
-                        headers: {
-                            "authorization": mcurState.token?.accessToken ? 
-                            ("Bearer " + mcurState.token?.accessToken) : ''
-                         },
-                        body: formData
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Upload failed');
-                    }
-
-                    const data = await response.json();
-                    const url = data.url.startsWith('http') ? data.url : window.location.origin + data.url;
-                    if (send) {
-                        await send(encoder(url, 'img'));
-                    }
-                 
-                } catch (error) {
-                    console.error('Upload error:', error);
-                    alert('图片上传失败，请重试');
-                }
-
+                await send(encoder('', 'img'), {
+                    attachments: Array.from(fileInput.files || []),
+                });
                 // 清空 input 以便重复上传同一文件
                 fileInput.value = '';
             };

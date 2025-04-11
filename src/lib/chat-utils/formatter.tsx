@@ -17,15 +17,6 @@ export const formatter = (rawStr?: string) => {
         case 'img':
             return (
                 <div>
-                    <img onClick={()=>{
-                        AlertConfirm({
-                        maskClosable: true,
-                        custom: (
-                            <div className={'max-w-[95vw] max-h-[95vh] display-block'}>
-                                <img src={res.content}  alt={'img'} />
-                            </div>
-                        )
-                    })}} src={res.content} alt={'img'} />
                 </div>
             )
     }

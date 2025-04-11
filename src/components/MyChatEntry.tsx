@@ -2,6 +2,8 @@ import { decoder } from '@/lib/chat-utils';
 import type { ReceivedChatMessage } from '@livekit/components-core';
 import { tokenize, createDefaultGrammar } from '@livekit/components-core';
 import * as React from 'react';
+import 'react-alert-confirm/lib/style.css';
+import AlertConfirm from "react-alert-confirm";
 
 /** @public */
 export type MessageFormatter = (message: string) => React.ReactNode;
@@ -77,9 +79,39 @@ export const ChatEntry: (
         <div className={`lk-message-body ${entry.from?.isLocal ? 'ml-auto': ''}`}>
             {!hideName && (name !== lastName) && <strong className="lk-participant-name">{name}</strong>}
             <div className='flex space-x-2'>
-                <div className='flex flex-col text-nowrap'>
-                    {formattedMessage}
-                </div>
+                {
+                    entityType === 'img' && entry.attachedFiles?.map(
+                        (file) =>
+                            file.type.startsWith('image/') && (
+                            <div key={file.name}>
+                                <img onClick={()=>{
+                                    AlertConfirm({
+                                    maskClosable: true,
+                                    custom: (
+                                        <div className={'max-w-[95vw] max-h-[95vh] display-block'}>
+                                            <img 
+                                                key={file.name}
+                                                src={URL.createObjectURL(file)}
+                                                alt={file.name}
+                                            />
+                                        </div>
+                                    )
+                                })}}
+                                    className='max-w-[150px]'
+                                    key={file.name}
+                                    src={URL.createObjectURL(file)}
+                                    alt={file.name}
+                                />
+                            </div>
+                            ),
+                        )
+                }
+                {
+                    entityType !== 'img' && 
+                        <div className='flex flex-col text-nowrap'>
+                            {formattedMessage}
+                        </div>
+                }
                 {(!hideTimestamp || hasBeenEdited) && entityType !== 'img' && (
                     <div className='flex flex-col justify-end  text-right text-nowrap'>
                         <span className="lk-timestamp">
