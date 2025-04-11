@@ -1,6 +1,7 @@
 import 'react-alert-confirm/lib/style.css';
 // import AlertConfirm from "react-alert-confirm";
 import { decoder } from ".";
+import { formatChatMessageLinks } from '@livekit/components-react';
 
 export const formatter = (rawStr?: string) => {
     const res = decoder(rawStr || "");  
@@ -11,7 +12,7 @@ export const formatter = (rawStr?: string) => {
         case 'text':
             return (
                 <div style={{ whiteSpace: 'pre-wrap' }}>
-                    {res.content}
+                    {formatChatMessageLinks(res.content)}
                 </div>
             )
         case 'img':
