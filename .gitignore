@@ -41,4 +41,5 @@ yarn-error.log*
 
 /src/styles/components-styles
 /public/uploads/*
+!public/uploads/README.md
 /cert

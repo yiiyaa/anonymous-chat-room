@@ -52,7 +52,7 @@ export default async function handleToken(req: NextApiRequest, res: NextApiRespo
             } catch (error) {
                 console.error(`Error checking room: ${roomName}`, error);
                 // 如果房间不存在，也删除对应的上传文件夹
-                if (error instanceof Error && error.status === 404) {
+                if (error instanceof Error && (error as any).status === 404) {
                     const roomUploadDir = path.join(uploadDir, roomName);
                     fs.rmSync(roomUploadDir, { recursive: true, force: true });
                     clearedRooms.push(roomName);
