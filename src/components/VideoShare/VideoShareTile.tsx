@@ -33,7 +33,7 @@ export const VideoShareTile = ({
     console.log("isWSMp4", isWSMp4)
     // document.addEventListener('DOMContentLoaded', function () {
     setTimeout(()=>{ 
-        var player = new window.wsPlayer("video", sharedUrl);
+        var player = new (window as any).wsPlayer("video", sharedUrl);
         player.open();
     }, 1000)
     // });
