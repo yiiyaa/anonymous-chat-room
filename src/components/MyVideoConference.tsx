@@ -105,7 +105,9 @@ import { useDenoiseMethod } from '@/lib/hooks/useDenoise';
 
     // 降噪方法
     React.useEffect(() => {
-        
+        try{
+            if(process.env.NEXT_PUBLIC_IS_USE_CLOUD !== 'true') return;
+            
             room?.on(RoomEvent.LocalTrackPublished, async (trackPublication) => {
             if (
                 trackPublication.source === Track.Source.Microphone &&
@@ -125,6 +127,10 @@ import { useDenoiseMethod } from '@/lib/hooks/useDenoise';
                 .catch((e) => console.error('Failed to load noise filter', e));
             }
             });
+
+        }catch(e){
+            console.log(e)
+        }
 
       }, [ room]);
 

@@ -16,27 +16,6 @@ export function ShareVideoPannel({showIcon,showText, ...props}: any) {
     const [shareUrl, setShareUrl] = useState("");
     const {curBackend} = useBackend();
     
-    const copyRTMPurl = () =>{
-        if(process.env.NEXT_PUBLIC_RTMPKEY){
-            const sign = getSign(roomctx.name, process.env.NEXT_PUBLIC_RTMPKEY)
-            navigator.clipboard.writeText(process.env.NEXT_PUBLIC_RTMPURL + '/' + roomctx.name + '?sign=' + sign)
-        }else{
-            navigator.clipboard.writeText(process.env.NEXT_PUBLIC_RTMPURL + '/' + roomctx.name)
-        }
-    }
-    const copyFLVPurl = () =>{
-        navigator.clipboard.writeText(process.env.NEXT_PUBLIC_FLVURL + '/' + roomctx.name + '.flv')
-    }
-    const getSign = (room:string,  key: string)=>{
-        var now = new Date();
-        console.log(key)
-        // 将当前时间加上1小时后，创建一个新的Date对象
-        var later = new Date(now.getTime() + 60 * 60 * 20000);
-        const later_sec = Math.floor(later.getTime() / 1000)
-        console.log(`/live/${room}-${later_sec}` + '-' + `${key}`)
-        const HashValue = md5(`/live/${room}-${later_sec}` + '-' + `${key}`).toString()
-        return `${later_sec}-${HashValue}`
-    }
     const updateVideoShare = async () => {
             const url = '/api/roomMetadata'
             if (roomctx.name === undefined) return undefined
@@ -125,18 +104,6 @@ export function ShareVideoPannel({showIcon,showText, ...props}: any) {
                                                 autoComplete="off"
                                             />
                                         </label>
-                                        {
-                                             process.env.NEXT_PUBLIC_RTMPURL &&  process.env.NEXT_PUBLIC_FLVURL &&
-                                            <div className=" w-full flex justify-between justify-between ">
-                                                <div className=" text-white sm:text-lg flex items-center"><span>Copy:</span> </div>
-                                                <div className="tooltip" data-tip="url to publish your video by rtmp">
-                                                    <div className="btn btn-primary text-white" onClick={copyRTMPurl}> publish url</div>
-                                                </div>
-                                                <div className="tooltip" data-tip="url to share your video by flv">
-                                                    <div className="btn btn-primary  text-white" onClick={copyFLVPurl}>share url</div>
-                                                </div>
-                                            </div>
-                                        }
                                 </div>
                             }
 

@@ -115,15 +115,15 @@ const isjoin = useMemo(() => {
       </div>
 
         {/* Share Icon */}
-        <div className=" animate__animated  animate__fadeIn" onClick={share}>
-        <div className="btn btn-ghost normal-case  text-center text-xl ">
+        <div className=" animate__animated  animate__fadeIn">
+        <div className="btn btn-ghost normal-case  text-center text-xl " onClick={share}>
             <ShareIcon className='icon  text-primary-focus' fill="currentColor"/>
         </div>
         </div>
 
         {/* Language Switch */}
-        <div className=" animate__animated  animate__fadeIn" onClick={switchLanguage}>
-        <div className="btn btn-ghost normal-case  text-center text-xl " >
+        <div className=" animate__animated  animate__fadeIn">
+        <div className="btn btn-ghost normal-case  text-center text-xl " onClick={switchLanguage}>
             <LanguageIcon className='icon  text-primary-focus' fill="currentColor"/>
         </div>
         </div>

@@ -350,13 +350,13 @@ export type LocalUserChoices = {
     
 
     return (
-        <div className="h-full flex flex-col items-center justify-center pt-10 overflow-y-auto" {...htmlProps}>
+        <div className="h-full flex flex-col items-center justify-center pt-10 " {...htmlProps}>
        {
             backends.length === 0 ? (
                 <></> 
             ):
-            <div className='h-full flex flex-col items-center justify-center pt-10 space-y-2 overflow-y-auto'>
-                <div className="flex-1 min-h-0 flex flex-col items-center justify-center overflow-y-auto">
+            <div className='h-full flex flex-col items-center justify-center pt-10 space-y-2 '>
+                <div className="flex-1 min-h-0 flex flex-col items-center justify-center">
                     <RoomInfo roomName={roomName} />
                     <div className=" divider "></div>
                     <div className="bg-primary rounded-lg">

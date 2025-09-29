@@ -70,12 +70,22 @@ function MyApp({ Component, pageProps }: AppProps) {
                 />
             )}
             {
-                process.env.NEXT_PUBLIC_USE_SHAREVIDEO && (
+                process.env.NEXT_PUBLIC_USE_TENCENT_LEB === 'true' && (
+                    <Script type="text/javascript" src="https://video.sdk.qcloudecdn.com/web/TXLivePlayer-1.3.2.min.js"></Script>
+                )
+            }
+            {
+                process.env.NEXT_PUBLIC_USE_TENCENT_LEB === 'true' && (
+                    <Script type="text/javascript" src="https://web.sdk.qcloud.com/player/tcplayer/release/v4.9.1/tcplayer.v4.9.1.min.js"></Script>
+                )
+            }
+            {
+                process.env.NEXT_PUBLIC_USE_SHAREVIDEO === 'true' && (
                     <Script type="text/javascript" src="https://cdn.staticfile.org/flv.js/1.6.2/flv.min.js"></Script>
                 )
             }
             {
-                process.env.NEXT_PUBLIC_USE_SHAREVIDEO && (
+                process.env.NEXT_PUBLIC_USE_SHAREVIDEO === 'true' && (
                     <Script type="text/javascript" src="https://npm.elemecdn.com/hls.js/dist/hls.min.js"></Script>
                 )
             }
