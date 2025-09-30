@@ -22,7 +22,7 @@ export const presets = [{
     fps: 30,
     nickname: '1080p30',
     preset: undefined as VideoPreset | undefined
-},,{
+},{
     w: 1920,
     h: 1080,
     bitrate: 7_500_000,
