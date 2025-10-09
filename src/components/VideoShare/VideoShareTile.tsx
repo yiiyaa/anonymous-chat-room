@@ -33,7 +33,7 @@ export const VideoShareTile = ({
   const isWebrtc = React.useMemo(()=>{
     const regex = /^webrtc:.*/i;
     console.log("isWebrtc", regex.test(sharedUrl))
-    return regex.test(sharedUrl)
+    return process.env.NEXT_PUBLIC_USE_TENCENT_LEB === 'true' && regex.test(sharedUrl)
   }, [sharedUrl])
 
   const isZlmWebrtc = React.useMemo(()=>{
@@ -44,7 +44,7 @@ export const VideoShareTile = ({
   const isArtc = React.useMemo(()=>{
     const regex = /^artc:.*/i;
     console.log("isArtc", regex.test(sharedUrl))
-    return regex.test(sharedUrl)
+    return process.env.NEXT_PUBLIC_USE_ALI_RTS === 'true' && regex.test(sharedUrl)
   }, [sharedUrl])
 
   React.useEffect(()=>{
