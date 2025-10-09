@@ -101,13 +101,13 @@ React.useEffect(()=>{
         }
     );
 
-    player.on(ZLMRTCClient.Events.WEBRTC_ICE_CANDIDATE_ERROR,function(e)
+    player.on(ZLMRTCClient.Events.WEBRTC_ICE_CANDIDATE_ERROR,function(e: any)
     {
       // ICE 协商出错
       console.log('ICE 协商出错');
     });
 
-    player.on(ZLMRTCClient.Events.WEBRTC_ON_REMOTE_STREAMS,function(s)
+    player.on(ZLMRTCClient.Events.WEBRTC_ON_REMOTE_STREAMS,function(s: any)
     {
       //获取到了远端流，可以播放,如果element 为null 或者不传,可以在这里播放(如下注释代码)
       /*
@@ -116,7 +116,7 @@ React.useEffect(()=>{
       console.log('播放成功',s);
     });
 
-    player.on(ZLMRTCClient.Events.WEBRTC_OFFER_ANWSER_EXCHANGE_FAILED,function(e)
+    player.on(ZLMRTCClient.Events.WEBRTC_OFFER_ANWSER_EXCHANGE_FAILED,function(e: any)
     {
       // offer anwser 交换失败
       console.log('offer anwser 交换失败',e);
